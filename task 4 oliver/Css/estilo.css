@@ -1,0 +1,17 @@
+.imagenn {
+    object-fit: contain ;
+    height: 100%;
+    word-wrap: 100%;
+    border-radius: 15px ;
+    
+}
+
+
+.card-body{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+}
+
+
