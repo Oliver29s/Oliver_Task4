@@ -8,6 +8,7 @@ async function consumirApi() {
     }
 
     let eventsApi = todosLosEventos.events
+    
     let upcoming = eventsApi.filter(everyEvent => everyEvent.date > todosLosEventos.date)
 
     let past = eventsApi.filter(everyEvent => everyEvent.date <= todosLosEventos.date)
@@ -31,19 +32,48 @@ async function consumirApi() {
     categoriasPasado = [...categoriasPasado]
     imprimirTablaFutura(categoriasPasado, "categoria_pasados")
      let estimado = upcoming.map(elemento => {
-        elemento.estimate = elemento.capacity
+        elemento.estimateAsistence = elemento.capacity
+        elemento.estimateGanancia = elemento.capacity * elemento.price
     })
-   let ganacia = upcoming.map(item => item.price * item.estimate )
-   console.log(ganacia)
-
-    let arrayVacio = []
-   let ganaciaEstimada = upcoming.filter(function(item){
-        if(item.category.includes("party")){
-            let x = item.estimate * 2
-            return x.push()
-        }
-   })
-   console.log(arrayVacio)
+    let categoriaParty = upcoming.filter(item => item.category.toLowerCase() == "party" )
+    console.log(categoriaParty)
+    let ganaciaParty = categoriaParty.map(item=> item.estimateGanancia)
+    console.log(ganaciaParty)
+     let totalParty = (ganaciaParty.reduce(function(a,b){return a+b}))
+     console.log(totalParty)
+     let categoriaBook = upcoming.filter(item => item.category.toLowerCase() == "books" )
+    console.log(categoriaBook)
+    let ganaciaBook = categoriaBook.map(item=> item.estimateGanancia)
+    console.log(ganaciaBook)
+     let totalBook = (ganaciaBook.reduce(function(y,x){return y+x}))
+     console.log(totalBook)
+     let categoriaCinema = upcoming.filter(item => item.category.toLowerCase() == "cinema" )
+    console.log(categoriaCinema)
+    let ganaciaCinema = categoriaCinema.map(item=> item.estimateGanancia)
+    console.log(ganaciaCinema)
+     let totalCinema = (ganaciaCinema.reduce(function(y,x){return y+x}))
+     console.log(totalCinema)
+     let categoriaRace = upcoming.filter(item => item.category.toLowerCase() == "race" )
+    console.log(categoriaRace)
+    let ganaciaRace = categoriaRace.map(item=> item.estimateGanancia)
+    console.log(ganaciaRace)
+     let totalRace = (ganaciaRace.reduce(function(y,x){return y+x}))
+     console.log(totalRace)
+     let categoriaMuseum = upcoming.filter(item => item.category.toLowerCase() == "museum" )
+     console.log(categoriaRace)
+     let ganaciaMuseum = categoriaMuseum.map(item=> item.estimateGanancia)
+     console.log(ganaciaRace)
+      let totalMuseum = (ganaciaMuseum.reduce(function(y,x){return y+x}))
+      console.log(totalMuseum)
+      let categoriaConcert = upcoming.filter(item => item.category.toLowerCase() == "concert" )
+     console.log(categoriaConcert)
+     let ganaciaConcert = categoriaConcert.map(item=> item.estimateGanancia)
+     console.log(ganaciaConcert)
+      let totalConcert = (ganaciaConcert.reduce(function(y,x){return y+x}))
+      console.log(totalConcert)
+     
+   
+   
 
 
 
@@ -52,7 +82,7 @@ async function consumirApi() {
 consumirApi()
 
 function imprimirPrimeraTabla(propiedad, contenedor) {
-    document.getElementById(contenedor).innerHTML = propiedad
+    document.getElementById(contenedor).innerHTML += propiedad
 
 }
 
