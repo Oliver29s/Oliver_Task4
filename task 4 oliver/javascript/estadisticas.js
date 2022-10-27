@@ -1,106 +1,96 @@
-async function consumirApi() {
+const table1 = document.getElementById('primera tabla')
+const table2 = document.getElementById('segunda tabla')
+const table3 = document.getElementById('tercera tabla')
 
+
+async function apiEvents() {
     try {
-        let eventsJson = await fetch('https://mh-amazing.herokuapp.com/amazing')
-        todosLosEventos = await eventsJson.json()
+        let apiEventsJson = await fetch('https://amazing-events.herokuapp.com/api/events')
+        apiEventsJsonn = await apiEventsJson.json()
     } catch (error) {
-        console.log("error");
+        console.log(error);
     }
 
-    let eventsApi = todosLosEventos.events
-    
-    let upcoming = eventsApi.filter(everyEvent => everyEvent.date > todosLosEventos.date)
+    let allEvents = apiEventsJsonn.events
+    let pastEvents = allEvents.filter(event => event.assistance)
+    let upcomingEvents = allEvents.filter(event => event.estimate)
 
-    let past = eventsApi.filter(everyEvent => everyEvent.date <= todosLosEventos.date)
-    // primera tabla de eventos pasados
-    past.map(pasadoEvento => {
-        pasadoEvento.porcentaje = pasadoEvento.assistance * 100 / pasadoEvento.capacity
+    console.log(upcomingEvents);
+    console.log(pastEvents)
+
+    allEvents.map(event => {
+        event.percentageAssistance = 100 * event.assistance / event.capacity
+        event.revenue = event.price * event.assistance
     })
-    let ordenadoPorPorcentaje = past.sort((evento1, evento2) => evento1.porcentaje - evento2.porcentaje)
-    let menor = ordenadoPorPorcentaje[0].name
-    imprimirPrimeraTabla(menor, "menor_porcentaje")
-    let mayor = ordenadoPorPorcentaje[ordenadoPorPorcentaje.length - 1].name
-    imprimirPrimeraTabla(mayor, "mayor_porcentaje")
-    let capacidadMayor = past.find(elemento => elemento.capacity >= 1000000).name
-    imprimirPrimeraTabla(capacidadMayor, "mayor_capacidad")
 
-    // primera tabla eventos futuros
-    let categoriasFuture = new Set(upcoming.map(element => element.category))
-    categoriasFuture = [...categoriasFuture]
-    imprimirTablaFutura(categoriasFuture, "categoria_futuros")
-    let categoriasPasado = new Set(past.map(element => element.category))
-    categoriasPasado = [...categoriasPasado]
-    imprimirTablaFutura(categoriasPasado, "categoria_pasados")
-     let estimado = upcoming.map(elemento => {
-        elemento.estimateAsistence = elemento.capacity
-        elemento.estimateGanancia = elemento.capacity * elemento.price
+    pastEvents.map(event => {
+        event.percentageAssistance = 100 * event.assistance / event.capacity
+        event.revenue = parseInt(event.price) * parseInt(event.assistance)
     })
-    let categoriaParty = upcoming.filter(item => item.category.toLowerCase() == "party" )
-    console.log(categoriaParty)
-    let ganaciaParty = categoriaParty.map(item=> item.estimateGanancia)
-    console.log(ganaciaParty)
-     let totalParty = (ganaciaParty.reduce(function(a,b){return a+b}))
-     console.log(totalParty)
-     let categoriaBook = upcoming.filter(item => item.category.toLowerCase() == "books" )
-    console.log(categoriaBook)
-    let ganaciaBook = categoriaBook.map(item=> item.estimateGanancia)
-    console.log(ganaciaBook)
-     let totalBook = (ganaciaBook.reduce(function(y,x){return y+x}))
-     console.log(totalBook)
-     let categoriaCinema = upcoming.filter(item => item.category.toLowerCase() == "cinema" )
-    console.log(categoriaCinema)
-    let ganaciaCinema = categoriaCinema.map(item=> item.estimateGanancia)
-    console.log(ganaciaCinema)
-     let totalCinema = (ganaciaCinema.reduce(function(y,x){return y+x}))
-     console.log(totalCinema)
-     let categoriaRace = upcoming.filter(item => item.category.toLowerCase() == "race" )
-    console.log(categoriaRace)
-    let ganaciaRace = categoriaRace.map(item=> item.estimateGanancia)
-    console.log(ganaciaRace)
-     let totalRace = (ganaciaRace.reduce(function(y,x){return y+x}))
-     console.log(totalRace)
-     let categoriaMuseum = upcoming.filter(item => item.category.toLowerCase() == "museum" )
-     console.log(categoriaRace)
-     let ganaciaMuseum = categoriaMuseum.map(item=> item.estimateGanancia)
-     console.log(ganaciaRace)
-      let totalMuseum = (ganaciaMuseum.reduce(function(y,x){return y+x}))
-      console.log(totalMuseum)
-      let categoriaConcert = upcoming.filter(item => item.category.toLowerCase() == "concert" )
-     console.log(categoriaConcert)
-     let ganaciaConcert = categoriaConcert.map(item=> item.estimateGanancia)
-     console.log(ganaciaConcert)
-      let totalConcert = (ganaciaConcert.reduce(function(y,x){return y+x}))
-      console.log(totalConcert)
-     
-   
-   
 
+    upcomingEvents.map(event => {
+        event.percentageAssistance = 100 * event.estimate / event.capacity
+        event.revenue = event.price * event.estimate
+    })
 
+    let capEvents = [...allEvents].sort((a, b) => a.capacity - b.capacity)
+    let maxCapEvent = capEvents[capEvents.length - 1]
 
+    let percAssisEvent = [...pastEvents].sort((a, b) => a.percentageAssistance - b.percentageAssistance)
+    let minPercAssi = percAssisEvent[0]
+    let maxPercAssi = percAssisEvent[percAssisEvent.length - 1]
 
-}
-consumirApi()
+    let filterCategory = new Set(pastEvents.map(event => event.category))
+    filterCategory = [...filterCategory]
+    console.log(filterCategory);
 
-function imprimirPrimeraTabla(propiedad, contenedor) {
-    document.getElementById(contenedor).innerHTML += propiedad
+    let dateCategory = [...new Set(allEvents.map(event => event.category))]
+    let upcomingCategory = [...new Set(upcomingEvents.map(event => event.category))]
 
-}
-
-function imprimirTablaFutura(array, contenedor) {
-    document.getElementById(contenedor).innerHTML = ""
-    array.forEach(elemento => {
-        document.getElementById(contenedor).innerHTML +=
-            `
-            <tr>
-                
-                    <li>${elemento}</li>
-                    
-                
-            </tr>
-            
-            `
+    dateCategory.forEach(element => {
+        let capacity = 0
+        let assistance = 0
+        let revenues = 0
+        pastEvents.forEach(event => {
+            if (event.category === element) {
+                capacity += event.capacity
+                assistance += event.assistance
+                revenues += event.revenue
+            }
+        })
+        table2.innerHTML += `<tr>
+                                <td>${element}</td>
+                                <td>${revenues.toLocaleString('de-DE')}</td>
+                                <td>${Math.round(assistance * 100 / capacity)}%</td>
+                            </tr>`
     });
 
+    table1.innerHTML += `<tr>
+                                <td>${maxPercAssi.name}: ${maxPercAssi.percentageAssistance}%</td>
+                                <td>${minPercAssi.name}: ${minPercAssi.percentageAssistance}%</td>
+                                <td>${maxPercAssi.name}: ${(maxCapEvent.capacity).toLocaleString('de-DE')}</td>
+                            </tr>`
+
+
+    dateCategory.forEach(element => {
+        let capacity = 0
+        let estimate = 0
+        let price = 0
+        upcomingEvents.forEach(event => {
+            if (event.category === element) {
+                capacity += event.capacity
+                estimate += event.estimate
+                price = event.price
+                
+
+                
+            }
+        })
+        table3.innerHTML += `<tr>
+                                 <td>${element}</td>
+                                  <td>${(estimate*price).toLocaleString('de-DE')}</td>
+                                  <td>${Math.round(estimate * 100 / capacity)}%</td>
+                             </tr>`
+    });
 }
-
-
+apiEvents()

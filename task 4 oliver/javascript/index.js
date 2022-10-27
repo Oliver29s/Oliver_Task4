@@ -1,8 +1,10 @@
 
+const buscador = document.getElementById("buscador")
+
 async function consumirApi(){
 
     try{
-    let  eventsJson = await fetch('https://mh-amazing.herokuapp.com/amazing')
+    let  eventsJson = await fetch('https://amazing-events.herokuapp.com/api/events')
          todosLosEventos = await eventsJson.json()
     }catch(error){
         console.log("error");
@@ -24,7 +26,7 @@ let printCategories = (array,id) => {
         document.querySelector(`#${id}`).innerHTML +=
             `
             <label class="d-flex align-items-center p-1" for="${cat}">${cat}
-                <input class="d-flex align-items-center m-1 checkbox" type="checkbox" id="${cat.toLowerCase()}" name="letter" value="${cat.toLowerCase()}">
+                <input class="d-flex align-items-center m-1 checkbox" type="checkbox" value="${cat.toLowerCase()}" id="${cat.toLowerCase()}" name="letter" value="${cat.toLowerCase()}">
             </label>
             `
     })
@@ -41,7 +43,9 @@ let arrayEventos = categorias.map(cadaCategoria => {
     return arrayFiltrado
 })
 
-function search(array) {
+
+
+function search(array,searchText = "") {
 
     let checks = document.querySelectorAll('.checkbox:checked')
 
@@ -55,12 +59,15 @@ function search(array) {
     if (filterArray.length===0) {
         filterArray = array
     }
+    filterArray = filterArray.filter(item=> item.name.toLowerCase().includes(searchText.toLowerCase()))
     imprimirCartas(filterArray,'events')
 }
 
 
-
-
+buscador.addEventListener("keyup",function(e){
+    console.log(e.target.value)
+    search(eventsApi,e.target.value)
+})
 
 
 }
@@ -75,11 +82,11 @@ function imprimirCartas(array,id) {
             <div class="styleCards card p-1" style="width: 15rem; ">
                     <img src="${event.image}" class="card-img-top" alt="imagen1">
                     <div class="card-body">
-                        <h5 class="card-title">${event.name}</h5>
+                        <h6 class="card-title fs-6">${event.name}</h6>
                         <p class="card-text"></p>
                         <div class="d-flex justify-content-between">
-                            <h5 class="mx-2">Price: ${event.price}</h5>
-                        <a href="./htmls/detalles.html?id=${event.id}" class="btn btn-danger">MAs info.</a>
+                            <h5 class="mx-2 fs-6 text ">Price: ${event.price}</h5>
+                        <a href="./htmls/detalles.html?id=${event.id}" class="btn btn-danger">Details.</a>
 
                         </div>
                     </div>

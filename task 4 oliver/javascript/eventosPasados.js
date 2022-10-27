@@ -42,7 +42,7 @@ let arrayEventos = categorias.map(cadaCategoria => {
     return arrayFiltrado
 })
 
-function search(array) {
+function search(array,searchText = "") {
 
     let checks = document.querySelectorAll('.checkbox:checked')
 
@@ -56,9 +56,13 @@ function search(array) {
     if (filterArray.length===0) {
         filterArray = array
     }
+    filterArray = filterArray.filter(item=> item.name.toLowerCase().includes(searchText.toLowerCase()))
     imprimirCartas(filterArray,'events')
 }
-
+buscador.addEventListener("keyup",function(e){
+    console.log(e.target.value)
+    search(past,e.target.value)
+})
 
 
 
@@ -73,14 +77,14 @@ function imprimirCartas(array,id) {
     array.forEach(event =>{
         document.querySelector(`#${id}`).innerHTML +=
             `
-            <div class="styleCards card p-1" style="width: 15rem; ">
+            <div class="styleCards card p-1" style="width: 15rem; heigth:8rem; ">
                     <img src="${event.image}" class="card-img-top" alt="imagen1">
                     <div class="card-body">
-                        <h5 class="card-title">${event.name}</h5>
+                        <h5 class="card-title fs-6 text">${event.name}</h5>
                         <p class="card-text"></p>
                         <div class="d-flex justify-content-between">
-                            <h6>Price: ${event.price}</h6>
-                        <a href="../htmls/detalles.html?id=${event.id}" class="btn btn-danger">Mas info.</a>
+                            <h6 class="fs-6 text">Price: ${event.price}</h6>
+                        <a href="../htmls/detalles.html?id=${event.id}" class="btn btn-danger">Details.</a>
 
                         </div>
                     </div>
